@@ -1,0 +1,23 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: AzureResourceManagerTemplateDeployment@3
+  inputs:
+    deploymentScope: 'Resource Group'
+    azureResourceManagerConnection: 'Adam the Automator(1427e7fb-a488-4ec5-be44-30ac10ca2e95)'
+    subscriptionId: '1427e7fb-a488-4ec5-be44-30ac10ca2e95'
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: 'Pluralsight-AppInfraDevOpsCourse'
+    location: 'East US'
+    templateLocation: 'URL of the file'
+    csmFileLink: 'https://raw.githubusercontent.com/adbertram/PSCourse-AzureVMDemo/main/azure_vm.json'
+    deploymentMode: 'Incremental'
