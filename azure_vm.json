@@ -87,7 +87,8 @@
                             "fileUris": [
                                 "https://raw.githubusercontent.com/adbertram/PSCourse-AzureVMDemo/main/install-webserver.ps1"
                             ],
-                            "commandToExecute": "powershell -ExecutionPolicy Unrestricted -file install-webserver.ps1"
+                            "commandToExecute": "powershell -ExecutionPolicy Unrestricted -file install-webserver.ps1",
+                            "timestamp": 123456789
                         }
                     }
                 }
