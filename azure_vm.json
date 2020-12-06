@@ -43,7 +43,9 @@
             "apiVersion": "2018-10-01",
             "location": "[resourceGroup().location]",
             "name": "WEBSRV",
-            "dependsOn": [],
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkInterfaces','WEBSRVnic')]"
+            ],
             "properties": {
                 "hardwareProfile": {
                     "vmSize": "[variables('vmSize')]"
