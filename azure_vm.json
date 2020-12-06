@@ -85,9 +85,9 @@
                         "autoUpgradeMinorVersion": true,
                         "settings": {
                             "fileUris": [
-                                "https://raw.githubusercontent.com/adbertram/MovieApp/master/infra_build_scripts/configure_winrm.ps1"
+                                "https://raw.githubusercontent.com/adbertram/PSCourse-AzureVMDemo/main/install-webserver.ps1"
                             ],
-                            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -file configure_winrm.ps1 ',concat('*.',resourceGroup().location,'.cloudapp.azure.com'))]"
+                            "commandToExecute": "powershell -ExecutionPolicy Unrestricted -file install-webserver.ps1"
                         }
                     }
                 }
