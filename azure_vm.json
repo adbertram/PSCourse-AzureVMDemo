@@ -1,0 +1,95 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "variables": {
+        "vmSize": "Standard_DS1",
+        "windowsOSVersion": "2019-Datacenter",
+        "osType": {
+            "publisher": "MicrosoftWindowsServer",
+            "offer": "WindowsServer",
+            "sku": "[variables('windowsOSVersion')]",
+            "version": "latest"
+        },
+        "imageReference": "[variables('osType')]",
+        "adminUsername": "vm_admin",
+        "adminPassword": "My$3cret!",
+        "virtualNetworkName": "Pluralsight-MSDevOpsSolutionsScirptsCourse-vnet",
+        "subnetName": "default"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2018-11-01",
+            "name": "WEBSRVnic",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+            ],
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "privateIPAllocationMethod": "Dynamic",
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), variables('subnetName'))]"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2018-10-01",
+            "location": "[resourceGroup().location]",
+            "name": "WEBSRV",
+            "dependsOn": [],
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "[variables('vmSize')]"
+                },
+                "osProfile": {
+                    "computerName": "WEBSRV",
+                    "adminUsername": "[variables('adminUsername')]",
+                    "adminPassword": "[variables('adminPassword')]"
+                },
+                "storageProfile": {
+                    "imageReference": "[variables('imageReference')]",
+                    "osDisk": {
+                        "createOption": "FromImage"
+                    }
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces','WEBSRVnic')]"
+                        }
+                    ]
+                }
+            },
+            "resources": [
+                {
+                    "type": "extensions",
+                    "name": "Install web feature",
+                    "apiVersion": "2019-07-01",
+                    "location": "[resourceGroup().location]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Compute/virtualMachines','WEBSRV')]"
+                    ],
+                    "properties": {
+                        "publisher": "Microsoft.Compute",
+                        "type": "CustomScriptExtension",
+                        "typeHandlerVersion": "1.4",
+                        "autoUpgradeMinorVersion": true,
+                        "settings": {
+                            "fileUris": [
+                                "https://raw.githubusercontent.com/adbertram/MovieApp/master/infra_build_scripts/configure_winrm.ps1"
+                            ],
+                            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -file configure_winrm.ps1 ',concat('*.',resourceGroup().location,'.cloudapp.azure.com'))]"
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}
