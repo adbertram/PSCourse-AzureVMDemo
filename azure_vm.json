@@ -72,7 +72,7 @@
             "resources": [
                 {
                     "type": "extensions",
-                    "name": "Install web feature",
+                    "name": "Installwebfeature",
                     "apiVersion": "2019-07-01",
                     "location": "[resourceGroup().location]",
                     "dependsOn": [
